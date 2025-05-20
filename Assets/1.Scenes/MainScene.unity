@@ -390,11 +390,11 @@ MonoBehaviour:
   wheels:
   - {fileID: 639653329}
   - {fileID: 478636167}
-  startRotateSpeed: 180
-  rotateReductionAmount: 60
+  rotateSpeed: 180
+  rotateSpeedDelta: 50
   backGround: {fileID: 7046971194176606358}
-  startMoveSpeed: 3
-  moveReductionAmount: 1
+  moveSpeed: 3
+  moveSpeedDelta: 0.7
 --- !u!61 &430949800
 BoxCollider2D:
   m_ObjectHideFlags: 0

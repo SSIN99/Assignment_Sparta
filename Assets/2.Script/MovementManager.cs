@@ -6,27 +6,34 @@ public class MovementManager : MonoBehaviour
 {
     [Header("Truck")]
     [SerializeField] private Transform[] wheels;
-    [SerializeField] private float startRotateSpeed;
-    [SerializeField] private float rotateReductionAmount;
+    [SerializeField] private float rotateSpeed;
+    [SerializeField] private float rotateSpeedDelta;
 
     [Header("BG")]
     [SerializeField] private Transform backGround;
-    [SerializeField] private float startMoveSpeed;
-    [SerializeField] private float moveReductionAmount;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float moveSpeedDelta;
 
     private int collidedMonsterCount;
+    private float maxRotateSpeed;
+    private float maxMoveSpeed;
 
+    private void Start()
+    {
+        maxRotateSpeed = rotateSpeed;
+        maxMoveSpeed = moveSpeed;
+    }
     private void Update()
     {
-        RotateWheel();
-        MoveBackGround();
+        MoveObjects();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Monster"))
         {
             collidedMonsterCount++;
-            Debug.Log("asd");
+            rotateSpeed = Mathf.Max(0, rotateSpeed - rotateSpeedDelta * collidedMonsterCount);
+            moveSpeed = Mathf.Max(0, moveSpeed - moveSpeedDelta * collidedMonsterCount);
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -34,20 +41,16 @@ public class MovementManager : MonoBehaviour
         if (collision.CompareTag("Monster"))
         {
             collidedMonsterCount--;
-            Debug.Log("dd");
+            rotateSpeed = Mathf.Min(maxRotateSpeed, rotateSpeed + rotateSpeedDelta * collidedMonsterCount);
+            moveSpeed = Mathf.Min(maxMoveSpeed, moveSpeed + moveSpeedDelta * collidedMonsterCount);
         }
     }
-    private void RotateWheel()
+    private void MoveObjects()
     {
-        float rotationSpeed = Mathf.Max(0, startRotateSpeed - rotateReductionAmount * collidedMonsterCount);
         foreach (Transform wheel in wheels)
         {
-            wheel.Rotate(0, 0, -rotationSpeed * Time.deltaTime);
+            wheel.Rotate(0, 0, -rotateSpeed * Time.deltaTime);
         }
-    }
-    private void MoveBackGround()
-    {
-        float moveSpeed = Mathf.Max(0, startMoveSpeed - moveReductionAmount * collidedMonsterCount);
         backGround.Translate(-moveSpeed * Time.deltaTime, 0, 0);
     }
 }
