@@ -20,10 +20,10 @@ public class Monster : MonoBehaviour
     private void Update()
     {
         if (isAttacking)
-            rb.velocity = Vector2.zero;
+            rb.velocity = new Vector2(0, rb.velocity.y);
         else
         {
-            rb.velocity = Vector2.left * speed;
+            rb.velocity = new Vector2(-1 * speed, rb.velocity.y);
         }
     }
 
