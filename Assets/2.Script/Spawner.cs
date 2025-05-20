@@ -20,7 +20,7 @@ public class Spawner : MonoBehaviour
     {
         for(int i = 0; i < spawnCount; i++)
         {
-            GameObject newMonster = Instantiate(monsterPrefab, transform);
+            GameObject newMonster = Instantiate(monsterPrefab);
             newMonster.SetActive(false);
             monsterPool.Add(newMonster);
         }
