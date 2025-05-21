@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovementManager : MonoBehaviour
+public class Movement : MonoBehaviour
 {
     [Header("Truck")]
     [SerializeField] private Transform[] wheels;
@@ -14,9 +14,9 @@ public class MovementManager : MonoBehaviour
     [SerializeField] private float moveSpeed;
     [SerializeField] private float moveSpeedDelta;
 
-    private int collidedMonsterCount;
     private float maxRotateSpeed;
     private float maxMoveSpeed;
+    private int collidedMonsterCount;
 
     private void Start()
     {
@@ -32,8 +32,7 @@ public class MovementManager : MonoBehaviour
         if (collision.CompareTag("Monster"))
         {
             collidedMonsterCount++;
-            rotateSpeed = Mathf.Max(0, rotateSpeed - rotateSpeedDelta * collidedMonsterCount);
-            moveSpeed = Mathf.Max(0, moveSpeed - moveSpeedDelta * collidedMonsterCount);
+            CalculateSpeed();
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -41,8 +40,7 @@ public class MovementManager : MonoBehaviour
         if (collision.CompareTag("Monster"))
         {
             collidedMonsterCount--;
-            rotateSpeed = Mathf.Min(maxRotateSpeed, rotateSpeed + rotateSpeedDelta * collidedMonsterCount);
-            moveSpeed = Mathf.Min(maxMoveSpeed, moveSpeed + moveSpeedDelta * collidedMonsterCount);
+            CalculateSpeed();
         }
     }
     private void MoveObjects()
@@ -52,5 +50,12 @@ public class MovementManager : MonoBehaviour
             wheel.Rotate(0, 0, -rotateSpeed * Time.deltaTime);
         }
         backGround.Translate(-moveSpeed * Time.deltaTime, 0, 0);
+    }
+    private void CalculateSpeed()
+    {
+        rotateSpeed = maxRotateSpeed - rotateSpeedDelta * collidedMonsterCount;
+        rotateSpeed = Mathf.Clamp(rotateSpeed, 0, maxRotateSpeed);
+        moveSpeed = maxMoveSpeed - moveSpeedDelta * collidedMonsterCount;
+        moveSpeed = Mathf.Clamp(moveSpeed, 0, maxMoveSpeed);
     }
 }

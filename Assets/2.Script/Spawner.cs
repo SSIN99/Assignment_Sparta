@@ -11,7 +11,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private int spawnCount;
     [SerializeField] private float spawnDelay;
-    [SerializeField] private float spawnLocationOffset;
 
     private string[] nameOfLines = { "Top", "Mid", "Bot" };
     private List<GameObject> monsterPool = new List<GameObject>();
@@ -41,10 +40,6 @@ public class Spawner : MonoBehaviour
     }
     private void PlaceMonsterOnLine(GameObject monster, int line)
     {
-        Vector2 spawnLocation = spawnPoint.position;
-        spawnLocation.y += spawnLocationOffset * line;
-        monster.transform.position = spawnLocation;
-
         monster.layer = LayerMask.NameToLayer(nameOfLines[line]);
         SpriteRenderer[] rends = monster.GetComponentsInChildren<SpriteRenderer>();
         foreach (SpriteRenderer sr in rends)
@@ -52,6 +47,7 @@ public class Spawner : MonoBehaviour
             sr.sortingLayerName = nameOfLines[line];
         }
 
+        monster.transform.position = spawnPoint.position;
         monster.SetActive(true);
     }
 }
